@@ -1,26 +1,41 @@
-package routers
+package main
 
 import (
 	product "ecommerce/handlers/products"
 	"ecommerce/handlers/reviews"
+	"flag"
 	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/jinzhu/gorm"
 )
 
 func main() {
 
+	db_name := flag.String("db", "product", "give db name")
+
+	db, err := gorm.Open("postgres", fmt.Sprintf("user=postgres password=MohanNeelima@01 dbname=%v sslmode=disable", *db_name))
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	defer db.Close()
+
+	var prod product.Server = product.Server{db}
+	var rev reviews.Server = reviews.Server{db}
+
 	//  Routing
 
 	router := mux.NewRouter()
-	router.HandleFunc("/api/products", product.GetProducts).Methods("GET")
-	router.HandleFunc("/api/products/{id}", product.GetProductsById).Methods("GET")
-	router.HandleFunc("/api/products/{id}/reviews", reviews.GetReviews).Methods("GET")
-	router.HandleFunc("/api/products/create", product.CreateProduct).Methods("POST")
-	router.HandleFunc("/api/products/{id}/reviews/create", reviews.CreateReview).Methods("POST")
-	router.HandleFunc("/api/products/{product_id}/reviews/{rating_id}/delete", reviews.DeleteReview).Methods("DELETE")
-	router.HandleFunc("/api/products/{product_id}/reviews/{rating_id}/update", reviews.UpdateReview).Methods("PUT")
+	router.HandleFunc("/api/products", prod.GetProducts).Methods("GET")
+	router.HandleFunc("/api/products/{id}", prod.GetProductsById).Methods("GET")
+	router.HandleFunc("/api/products/create", prod.CreateProduct).Methods("POST")
+	router.HandleFunc("/api/products/{id}/reviews", rev.GetReviews).Methods("GET")
+	router.HandleFunc("/api/products/{id}/reviews/create", rev.CreateReview).Methods("POST")
+	router.HandleFunc("/api/products/{product_id}/reviews/{rating_id}/delete", rev.DeleteReview).Methods("DELETE")
+	router.HandleFunc("/api/products/{product_id}/reviews/{rating_id}/update", rev.UpdateReview).Methods("PUT")
 	fmt.Println("server at 8080")
 	http.ListenAndServe(":8080", router) // port opened at 8080
 
