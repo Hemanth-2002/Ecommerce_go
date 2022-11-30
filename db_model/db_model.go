@@ -1,12 +1,18 @@
 package model
 
 import (
+	"flag"
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 )
 
 func CreateDB() *gorm.DB {
-	db, err := gorm.Open("postgres", "user=postgres password=MohanNeelima@01 dbname=product sslmode=disable")
+
+	db_name := flag.String("db", "product", "give db name")
+
+	db, err := gorm.Open("postgres", fmt.Sprintf("user=postgres password=MohanNeelima@01 dbname=%v sslmode=disable", *db_name))
 	checkError(err)
 
 	// db.DropTableIfExists(&Product{})
