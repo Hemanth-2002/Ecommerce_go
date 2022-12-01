@@ -11,8 +11,9 @@ import (
 func CreateDB() *gorm.DB {
 
 	db_name := flag.String("db", "product", "give db name")
+	db_password := flag.String("db", "MohanNeelima@01", "give db pwd")
 
-	db, err := gorm.Open("postgres", fmt.Sprintf("user=postgres password=MohanNeelima@01 dbname=%v sslmode=disable", *db_name))
+	db, err := gorm.Open("postgres", fmt.Sprintf("user=postgres password=%v dbname=%v sslmode=disable", *db_password, *db_name))
 	checkError(err)
 
 	// db.DropTableIfExists(&Product{})
