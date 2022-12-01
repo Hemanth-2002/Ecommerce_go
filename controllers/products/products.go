@@ -21,7 +21,7 @@ func (s Server) GetProducts(w http.ResponseWriter, r *http.Request) {
 	// defer s.Db.Close()
 }
 
-func (s Server) GetProductsById(w http.ResponseWriter, r *http.Request) {
+func (s Server) GetProductById(w http.ResponseWriter, r *http.Request) {
 	var products []model.Product
 	params := mux.Vars(r)["id"]
 	s.Db.Find(&products).First(&products, params)

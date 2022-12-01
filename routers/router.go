@@ -30,7 +30,7 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/api/products", prod.GetProducts).Methods("GET")
-	router.HandleFunc("/api/products/{id}", prod.GetProductsById).Methods("GET")
+	router.HandleFunc("/api/products/{id}", prod.GetProductById).Methods("GET")
 	router.HandleFunc("/api/products/create", prod.CreateProduct).Methods("POST")
 	router.HandleFunc("/api/products/{id}/reviews", rev.GetReviews).Methods("GET")
 	router.HandleFunc("/api/products/{id}/reviews/create", rev.CreateReview).Methods("POST")
