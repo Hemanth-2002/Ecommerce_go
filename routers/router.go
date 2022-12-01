@@ -5,6 +5,7 @@ import (
 	"ecommerce/controllers/reviews"
 	"flag"
 	"fmt"
+	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -36,5 +37,5 @@ func main() {
 	router.HandleFunc("/api/products/{product_id}/reviews/{rating_id}/delete", rev.DeleteReview).Methods("DELETE")
 	router.HandleFunc("/api/products/{product_id}/reviews/{rating_id}/update", rev.UpdateReview).Methods("PUT")
 	fmt.Println("server at 8080")
-
+	http.ListenAndServe(":8080", router) // port opened at 8080
 }
