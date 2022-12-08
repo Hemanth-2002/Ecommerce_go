@@ -2,12 +2,13 @@ package main
 
 import (
 	product "ecommerce/controllers/products"
-	"ecommerce/controllers/reviews"
+	// "ecommerce/controllers/reviews"
 	"flag"
 	"fmt"
 	"net/http"
 
 	authorize "ecommerce/authorization"
+	database "ecommerce/database"
 	token "ecommerce/generate_token"
 
 	"github.com/gorilla/mux"
@@ -28,19 +29,19 @@ func main() {
 
 	defer db.Close()
 
-	var prod product.Server = product.Server{db}
-	var rev reviews.Server = reviews.Server{db}
+	var prod = product.Server{Db: database.Dbclient{Db: db}}
+	// var rev reviews.Server = reviews.Server{Db: db}
 
 	//  Routing
 
 	router := mux.NewRouter()
 	router.Handle("/api/products", authorize.IsAuthorized(prod.GetProducts)).Methods("GET")
-	router.Handle("/api/products/{id}", authorize.IsAuthorized(prod.GetProductById)).Methods("GET")
-	router.Handle("/api/products/create", authorize.IsAuthorized(prod.CreateProduct)).Methods("POST")
-	router.Handle("/api/products/{id}/reviews", authorize.IsAuthorized(rev.GetReviews)).Methods("GET")
-	router.Handle("/api/products/{id}/reviews/create", authorize.IsAuthorized(rev.CreateReview)).Methods("POST")
-	router.Handle("/api/products/{product_id}/reviews/{rating_id}/delete", authorize.IsAuthorized(rev.DeleteReview)).Methods("DELETE")
-	router.Handle("/api/products/{product_id}/reviews/{rating_id}/update", authorize.IsAuthorized(rev.UpdateReview)).Methods("PUT")
+	// router.Handle("/api/products/{id}", authorize.IsAuthorized(prod.GetProductById)).Methods("GET")
+	// router.Handle("/api/products/create", authorize.IsAuthorized(prod.CreateProduct)).Methods("POST")
+	// router.Handle("/api/products/{id}/reviews", authorize.IsAuthorized(rev.GetReviews)).Methods("GET")
+	// router.Handle("/api/products/{id}/reviews/create", authorize.IsAuthorized(rev.CreateReview)).Methods("POST")
+	// router.Handle("/api/products/{product_id}/reviews/{rating_id}/delete", authorize.IsAuthorized(rev.DeleteReview)).Methods("DELETE")
+	// router.Handle("/api/products/{product_id}/reviews/{rating_id}/update", authorize.IsAuthorized(rev.UpdateReview)).Methods("PUT")
 	fmt.Println("server at 8080")
 	http.ListenAndServe(":8080", router) // port opened at 8080
 }
